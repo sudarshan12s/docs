@@ -1,70 +1,97 @@
-# Oracle AI Vector Search
+---
+title: "Oracle AI Vector Search integration"
+description: "Integrate with the Oracle AI Vector Search vector store using LangChain JavaScript."
+---
 
-Oracle AI Vector Search is designed for Artificial Intelligence (AI) workloads that allows you to query data based on semantics, rather than keywords.
-One of the biggest benefits of Oracle AI Vector Search is that semantic search on unstructured data can be combined with relational search on business data in one single system.
-This is not only powerful but also significantly more effective because you don't need to add a specialized vector database, eliminating the pain of data fragmentation between multiple systems.
+<Tip>
+**Compatibility**: Only available on Node.js.
+</Tip>
 
-In addition, your vectors can benefit from all of Oracle Database’s most powerful features, like the following:
+Oracle AI Vector Search stores embeddings alongside relational data inside Oracle Database. The `@langchain/oracle` package provides the `OracleVS` vector store plus helpers for loading, summarizing, and embedding documents.
 
- * [Partitioning Support](https://www.oracle.com/database/technologies/partitioning.html)
- * [Real Application Clusters scalability](https://www.oracle.com/database/real-application-clusters/)
- * [Exadata smart scans](https://www.oracle.com/database/technologies/exadata/software/smartscan/)
- * [Shard processing across geographically distributed databases](https://www.oracle.com/database/distributed-database/)
- * [Transactions](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-31319EA7-994C-4D25-8814-0214ABD3CBDA)
- * [Parallel SQL](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-D28717E4-0F77-44F5-BB4E-234C31D4E4BA)
- * [Disaster recovery](https://www.oracle.com/database/data-guard/)
- * [Security](https://www.oracle.com/security/database-security/)
- * [Oracle Machine Learning](https://www.oracle.com/artificial-intelligence/database-machine-learning/)
- * [Oracle Graph Database](https://www.oracle.com/database/integrated-graph-database/)
- * [Oracle Spatial and Graph](https://www.oracle.com/database/spatial/)
- * [Oracle Blockchain](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-B469E277-978E-4378-A8C1-26D3FF96C9A6)
- * [JSON](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-D7BCE045-EF6D-47E9-9BB2-30C01933248E)
+## Overview
 
+### Integration details
 
-## Document Loaders
+| Class | Package | Hybrid search | PY support |
+| :--- | :--- | :---: | :---: |
+| [`OracleVS`](https://api.js.langchain.com/classes/langchain_oracle.OracleVS.html) | [`@langchain/oracle`](https://www.npmjs.com/package/@langchain/oracle) | ✅ | ✅ |
 
-Please check the [usage example](/docs/integrations/document_loaders/file_loaders/oracleai).
+## Setup
 
-```typescript
-import {OracleDocLoader} from "@langchain/oracle";
+Install Oracle client bindings and the LangChain Oracle helpers:
 
-const loader = new OracleDocLoader(conn, loader_params);
-const docs = await loader.load();
+<CodeGroup>
+```bash npm
+npm install @langchain/oracle oracledb @langchain/core
+```
+```bash yarn
+yarn add @langchain/oracle oracledb @langchain/core
+```
+```bash pnpm
+pnpm add @langchain/oracle oracledb @langchain/core
+```
+</CodeGroup>
+
+Set connection credentials for the Oracle user that will own the vector table:
+
+```bash
+export ORACLE_USER=testuser
+export ORACLE_PASSWORD=testuser
+export ORACLE_DSN="localhost:1521/free"
 ```
 
-## Text Splitter
+## Create a vector store
 
-Please check the [usage example](/docs/integrations/document_loaders/file_loaders/oracleai).
+The example below assumes that you already created a table with vector and metadata columns and generated embeddings using [`OracleEmbeddings`](/oss/javascript/integrations/text_embedding/oracleai).
 
+:::js
 ```typescript
-import {OracleTextSplitter} from "@langchain/oracle";
+import oracledb from "oracledb";
+import { OracleVS } from "@langchain/oracle";
+import { Document } from "@langchain/core/documents";
 
-const splitter = new OracleTextSplitter(conn, splitter_params);
-let chunks = await splitter.splitText(doc.pageContent);
+const connection = await oracledb.getConnection({
+  user: process.env.ORACLE_USER,
+  password: process.env.ORACLE_PASSWORD,
+  connectionString: process.env.ORACLE_DSN,
+});
+
+const vectorStore = new OracleVS(connection, {
+  owner: "TESTUSER",
+  tablename: "DEMO_VECTORS",
+  idColumn: "ID",
+  embeddingColumn: "EMBEDDING",
+  metadataColumns: ["DOC_ID", "TITLE"],
+});
+
+const docs: Document[] = [
+  {
+    pageContent: "LangChain works great with Oracle Database.",
+    metadata: { doc_id: "doc-1", title: "RAG overview" },
+  },
+];
+
+await vectorStore.addDocuments(docs);
 ```
+:::
 
-## Embeddings
+## Query with hybrid filters
 
-Please check the [usage example](/docs/integrations/text_embedding/oracleai).
+Combine semantic similarity with SQL predicates on the same table.
 
+:::js
 ```typescript
-import {OracleEmbeddings} from "@langchain/oracle";
+const results = await vectorStore.similaritySearch("oracle rag", 3, {
+  where: "DOC_ID LIKE 'doc-%'",
+});
 
-const embedder = new OracleEmbeddings(conn, embedder_params, proxy);
-const embed = await embedder.embedQuery(chunk);
+console.log(results[0]?.pageContent);
 ```
+:::
 
-## Summary
+## Next steps
 
-Please check the [usage example](/docs/integrations/tools/oracleai).
-
-```typescript
-import {OracleSummary} from "@langchain/oracle";
-
-const model = new OracleSummary(conn, summary_params, proxy);
-const summary = await model.getSummary(doc.pageContent);
-```
-
-## End to End Demo
-
-Please check the [Oracle AI Vector Search End-to-End Demo Guide](https://github.com/langchain-ai/langchainjs/tree/main/cookbook/oracleai.mdx).
+- Load content with [`OracleDocLoader`](/oss/javascript/integrations/document_loaders/file_loaders/oracleai)
+- Generate embeddings with [`OracleEmbeddings`](/oss/javascript/integrations/text_embedding/oracleai)
+- Summarize documents using [`OracleSummary`](/oss/javascript/integrations/tools/oracleai)
