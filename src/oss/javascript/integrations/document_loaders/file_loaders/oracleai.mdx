@@ -1,81 +1,117 @@
-# Oracle AI Vector Search: Document Processing
+---
+title: "OracleDocLoader integration"
+description: "Integrate with the OracleDocLoader document loader using LangChain JavaScript."
+---
 
-## Load Documents
+<Tip>
+**Compatibility**: Only available on Node.js.
+</Tip>
 
-You have the flexibility to load documents from either the Oracle Database, a file system, or both, by appropriately configuring the loader parameters. For comprehensive details on these parameters, please consult the [Oracle AI Vector Search Guide](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-73397E89-92FB-48ED-94BB-1AD960C4EA1F).
+Oracle AI Vector Search keeps documents and embeddings inside Oracle Database so you can build retrieval-augmented generation (RAG) pipelines without moving data across services. @[OracleDocLoader] reads content from Oracle tables or from the local filesystem and normalizes it for downstream LangChain components. Pair it with @[OracleTextSplitter] when you need to chunk long documents before embedding.
 
-A significant advantage of utilizing OracleDocLoader is its capability to process over 150 distinct file formats, eliminating the need for multiple loaders for different document types. For a complete list of the supported formats, please refer to the [Oracle Text Supported Document Formats](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-2EC9C942-0989-4FEE-909A-3575349AC706).
+## Overview
 
-After loading the documents, you can may want to split the text for embedding with OracleTextSplitter or generate a summary with OracleSummary.
+### Integration details
 
-Below is a sample code snippet that demonstrates how to use OracleDocLoader
+| Class | Package | Compatibility | Local | [PY support](/oss/python/integrations/document_loaders/oracleai) |
+| :--- | :--- | :---: | :---: | :---: |
+| [OracleDocLoader](https://api.js.langchain.com/classes/langchain_oracle.OracleDocLoader.html) | [`@langchain/oracle`](https://www.npmjs.com/package/@langchain/oracle) | Node-only | ✅ | ✅ |
+| [OracleTextSplitter](https://api.js.langchain.com/classes/langchain_oracle.OracleTextSplitter.html) | [`@langchain/oracle`](https://www.npmjs.com/package/@langchain/oracle) | Node-only | ✅ | ✅ |
+
+## Setup
+
+To use @[OracleDocLoader] install the `@langchain/oracle` helpers plus the [`oracledb`](https://www.npmjs.com/package/oracledb) driver that opens database connections.
+
+### Credentials
+
+Set environment variables (or use another secrets manager) for the Oracle user that owns the source data.
+
+```bash
+export ORACLE_USER=testuser
+export ORACLE_PASSWORD=testuser
+export ORACLE_DSN="localhost:1521/free"
+```
+
+### Installation
+
+<CodeGroup>
+```bash npm
+npm install @langchain/oracle oracledb @langchain/core
+```
+```bash yarn
+yarn add @langchain/oracle oracledb @langchain/core
+```
+```bash pnpm
+pnpm add @langchain/oracle oracledb @langchain/core
+```
+</CodeGroup>
+
+## Instantiation
 
 ```typescript
-import {OracleDocLoader} from "@langchain/oracle";
+import oracledb from "oracledb";
+import { OracleDocLoader } from "@langchain/oracle";
 
-/*
-// loading a local file
-loader_params = {"file": "<file>"};
+const connection = await oracledb.getConnection({
+  user: process.env.ORACLE_USER,
+  password: process.env.ORACLE_PASSWORD,
+  connectionString: process.env.ORACLE_DSN,
+});
 
-// loading from a local directory
-loader_params = {"dir": "<directory>"};
-*/
+const loader = new OracleDocLoader(connection, {
+  owner: "TESTUSER",
+  tablename: "DEMO_TAB",
+  colname: "DATA",
+});
+```
 
-// loading from Oracle Database table
-// make sure you have the table with this specification
-const loader_params = {
-  "owner": "testuser",
-  "tablename": "demo_tab",
-  "colname": "data",
-};
+## Load from Oracle Database
 
-// load the docs
-const loader = new OracleDocLoader(conn, loader_params);
+```typescript
 const docs = await loader.load();
-
-// verify
-console.log(`Number of docs loaded: ${docs.length}`);
-//console.log(`Document-0: ${docs[0].pageContent}`);
+console.log(`Loaded ${docs.length} documents`);
+console.log(docs[0]?.pageContent.slice(0, 120));
 ```
 
-## Split Documents
+## Load from files or directories
 
-The documents may vary in size, ranging from small to very large. You may need to chunk the documents into smaller sections to facilitate the generation of embeddings. A wide array of customization options is available for this splitting process. For comprehensive details regarding these parameters, please consult the [Oracle AI Vector Search Guide](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-4E145629-7098-4C7C-804F-FC85D1F24240).
-
-Below is a sample code illustrating how to implement this:
+Switch the loader parameters to ingest local content. @[OracleDocLoader] automatically handles more than 150 file formats; see the [Oracle Text supported formats](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-2EC9C942-0989-4FEE-909A-3575349AC706) for the full list.
 
 ```typescript
-import {OracleTextSplitter} from "@langchain/oracle";
+const fileLoader = new OracleDocLoader(connection, {
+  file: "/path/to/sample.pdf",
+});
 
-/*
-// Some examples
-// split by chars, max 500 chars
-splitter_params = {"split": "chars", "max": 500, "normalize": "all"};
-
-// split by words, max 100 words
-splitter_params = {"split": "words", "max": 100, "normalize": "all"};
-
-// split by sentence, max 20 sentences
-splitter_params = {"split": "sentence", "max": 20, "normalize": "all"};
-*/
-
-// split by default parameters
-const splitter_params = {"normalize": "all"};
-
-// get the splitter instance
-const splitter = new OracleTextSplitter(conn, splitter_params);
-
-let list_chunks = [];
-for (let[, doc]of docs.entries()) {
-  let chunks = await splitter.splitText(doc.pageContent);
-  list_chunks.push(chunks);
-}
-
-// verify
-console.log(`Number of Chunks: ${list_chunks.length}`);
-//console.log(`Chunk-0: ${list_chunks[0]}`); // content
+const directoryLoader = new OracleDocLoader(connection, {
+  dir: "/path/to/documents",
+});
 ```
 
-## End to End Demo
+## Chunk documents
 
-Please refer to the complete demo guide [Oracle AI Vector Search End-to-End Demo Guide](https://github.com/langchain-ai/langchainjs/tree/main/cookbook/oracleai.mdx) to build an end to end RAG pipeline with the help of Oracle AI Vector Search.
+Chunk long documents before embedding to improve recall. @[OracleTextSplitter] offers multiple strategies including character, word, and sentence boundaries. See the [Oracle AI Vector Search guide](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-4E145629-7098-4C7C-804F-FC85D1F24240) for parameter descriptions.
+
+```typescript
+import { OracleTextSplitter } from "@langchain/oracle";
+
+const splitter = new OracleTextSplitter(connection, {
+  split: "chars",
+  max: 500,
+  normalize: "all",
+});
+
+const chunks = await splitter.splitText(docs[0].pageContent);
+console.log(`Generated ${chunks.length} chunks`);
+```
+
+## Next steps
+
+- Build a retrieval pipeline with [`OracleVS`](/oss/javascript/integrations/vectorstores/oracleai)
+- Generate embeddings using [`OracleEmbeddings`](/oss/javascript/integrations/text_embedding/oracleai)
+- Explore the end-to-end [Oracle AI Vector Search demo](https://github.com/langchain-ai/langchainjs/tree/main/cookbook/oracleai.mdx)
+
+---
+
+## API reference
+
+For detailed documentation of all @[OracleDocLoader] and @[OracleTextSplitter] features and configuration options head to the [OracleDocLoader API reference](https://api.js.langchain.com/classes/langchain_oracle.OracleDocLoader.html) and [OracleTextSplitter API reference](https://api.js.langchain.com/classes/langchain_oracle.OracleTextSplitter.html).
