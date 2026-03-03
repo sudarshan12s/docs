@@ -68,7 +68,14 @@ const vectorStore = new OracleVS(connection, {
 const docs: Document[] = [
   {
     pageContent: "LangChain works great with Oracle Database.",
-    metadata: { doc_id: "doc-1", title: "RAG overview" },
+    metadata: {
+      doc_id: "doc-1",
+      title: "RAG overview",
+      status: "release",
+      tags: ["AI", "rag"],
+      category: "books",
+      price: 18,
+    },
   },
 ];
 
@@ -76,19 +83,49 @@ await vectorStore.addDocuments(docs);
 ```
 :::
 
-## Query with hybrid filters
+## Filter search results
 
-Combine semantic similarity with SQL predicates on the same table.
+You can pass rich metadata filters as the third argument to `similaritySearch`, `similaritySearchWithScore`, or `similaritySearchVectorWithScore`. Filters operate on the JSON `metadata` column that Oracle VS maintains for each document.
+
+Supported comparison operators include `$eq` (default), `$ne`, `$lt`, `$lte`, `$gt`, `$gte`, `$in`, `$nin`, `$between`, and `$exists`. Combine clauses with `$and` and `$or` to build more expressive predicates.
 
 :::js
 ```typescript
 const results = await vectorStore.similaritySearch("oracle rag", 3, {
-  where: "DOC_ID LIKE 'doc-%'",
+  $and: [
+    { status: "release" },
+    { tags: { $in: ["AI"] } },
+    { price: { $between: [10, 25] } },
+  ],
 });
 
+// Or request scores alongside documents.
+const scored = await vectorStore.similaritySearchWithScore(
+  "oracle rag",
+  3,
+  { status: "release" },
+);
+
 console.log(results[0]?.pageContent);
+console.log(scored[0]?.[1]); // similarity score
 ```
 :::
+
+Nested logical clauses are also supported. For example:
+
+```typescript
+const complexFilter = {
+  $or: [
+    { status: "draft" },
+    {
+      $and: [
+        { category: "books" },
+        { price: { $lte: 20 } },
+      ],
+    },
+  ],
+};
+```
 
 ## Next steps
 
