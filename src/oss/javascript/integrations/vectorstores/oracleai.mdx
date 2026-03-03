@@ -1,5 +1,5 @@
 ---
-title: "Oracle AI Vector Search integration"
+title: "Oracle AI vector Search integration"
 description: "Integrate with the Oracle AI Vector Search vector store using LangChain JavaScript."
 ---
 
@@ -7,7 +7,16 @@ description: "Integrate with the Oracle AI Vector Search vector store using Lang
 **Compatibility**: Only available on Node.js.
 </Tip>
 
-Oracle AI Vector Search stores embeddings alongside relational data inside Oracle Database. The `@oracle/langchain-oracledb` package provides the `OracleVS` vector store plus helpers for loading, summarizing, and embedding documents.
+Oracle AI Database supports AI workloads where you query data by **meaning** (semantics), not just keywords. It combines **semantic search over unstructured content** with **relational filtering over business data** in a single system—so you can build retrieval workflows (like RAG) without introducing a separate vector database and fragmenting data across multiple platforms.
+
+This guide demonstrates how to use `OracleVS` (the LangChain vector store integration for Oracle AI Vector Search) to:
+
+- Ingest documents and embeddings into Oracle
+- Run similarity search
+- Create HNSW and IVF indexes
+- Apply metadata filters for advanced retrieval
+- Enable hybrid search (keyword + semantic) in Oracle Database 26ai
+- Run full-text search using Oracle Text
 
 ## Overview
 
