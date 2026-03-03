@@ -1,13 +1,19 @@
 ---
-title: "OracleDocLoader integration"
-description: "Integrate with the OracleDocLoader document loader using LangChain JavaScript."
+title: "Oracle AI vector search document processing integration"
+description: "Integrate with the Oracle AI vector search document processing document loader using LangChain JavaScript."
 ---
 
 <Tip>
 **Compatibility**: Only available on Node.js.
 </Tip>
 
-Oracle AI Vector Search keeps documents and embeddings inside Oracle Database so you can build retrieval-augmented generation (RAG) pipelines without moving data across services. @[OracleDocLoader] reads content from Oracle tables or from the local filesystem and normalizes it for downstream LangChain components. Pair it with @[OracleTextSplitter] when you need to chunk long documents before embedding.
+Oracle AI Database supports document-centric AI workflows by combining semantic search over unstructured content with relational queries over business data in a single system. This makes it easier to build retrieval workflows (like RAG) without splitting data and vectors across multiple databases.
+
+> **Why in-database document processing?**
+> You can apply Oracle Database capabilities—security, transactions, scalability, and high availability—to the same pipeline that loads, chunks, and stores content for AI search and retrieval.
+
+If you are just starting with Oracle Database, consider exploring the [free Oracle 26 AI](https://www.oracle.com/database/free/#resources), which provides a simple way to get set up. While working with the database, it’s often advisable to avoid using the `SYSTEM` user for application workloads; instead, create a dedicated user with the minimum required privileges. For background on user administration, refer to the official [Oracle guide](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D).
+
 
 ## Overview
 
@@ -17,6 +23,12 @@ Oracle AI Vector Search keeps documents and embeddings inside Oracle Database so
 | :--- | :--- | :---: | :---: | :---: |
 | [OracleDocLoader](https://api.js.langchain.com/classes/langchain_oracle.OracleDocLoader.html) | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | Node-only | ✅ | ✅ |
 | [OracleTextSplitter](https://api.js.langchain.com/classes/langchain_oracle.OracleTextSplitter.html) | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | Node-only | ✅ | ✅ |
+
+### Load documents
+
+Users have the flexibility to load documents from either the Oracle Database, a file system, or both, by appropriately configuring the loader parameters. For comprehensive details on these parameters, please consult the [Oracle AI Vector Search Guide](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_vector_chain1.html#GUID-73397E89-92FB-48ED-94BB-1AD960C4EA1F).
+
+A significant advantage of utilizing OracleDocLoader is its capability to process over 150 distinct file formats, eliminating the need for multiple loaders for different document types. For a complete list of the supported formats, please refer to the [Oracle Text Supported Document Formats](https://docs.oracle.com/en/database/oracle/oracle-database/23/ccref/oracle-text-supported-document-formats.html).
 
 ## Setup
 
@@ -89,7 +101,7 @@ const directoryLoader = new OracleDocLoader(connection, {
 
 ## Chunk documents
 
-Chunk long documents before embedding to improve recall. @[OracleTextSplitter] offers multiple strategies including character, word, and sentence boundaries. See the [Oracle AI Vector Search guide](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-4E145629-7098-4C7C-804F-FC85D1F24240) for parameter descriptions.
+The documents may vary in size, ranging from small to very large. Users often prefer to chunk their documents into smaller sections to facilitate the generation of embeddings. A wide array of customization options is available for this splitting process. For comprehensive details regarding these parameters, please consult the [Oracle AI Vector Search Guide](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_vector_chain1.html#GUID-4E145629-7098-4C7C-804F-FC85D1F24240).
 
 ```typescript
 import { OracleTextSplitter } from "@oracle/langchain-oracledb";
@@ -108,7 +120,6 @@ console.log(`Generated ${chunks.length} chunks`);
 
 - Build a retrieval pipeline with [`OracleVS`](/oss/javascript/integrations/vectorstores/oracleai)
 - Generate embeddings using [`OracleEmbeddings`](/oss/javascript/integrations/text_embedding/oracleai)
-- Explore the end-to-end [Oracle AI Vector Search demo](https://github.com/langchain-ai/langchainjs/tree/main/cookbook/oracleai.mdx)
 
 ---
 
