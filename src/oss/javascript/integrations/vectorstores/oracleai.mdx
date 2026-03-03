@@ -136,6 +136,46 @@ const complexFilter = {
 };
 ```
 
+## Accelerate search with vector indexes
+
+Oracle Database can speed up similarity queries by creating vector indexes on the `embedding` column. The `@oracle/langchain-oracledb` helpers expose a `createIndex` utility that provisions either HNSW (default) or IVF indexes.
+
+### HNSW index (default)
+
+Use HNSW when you want a graph-based index that balances recall and latency. Omit `idxType` to use the default configuration or override parameters such as `neighbors`, `efConstruction`, and `accuracy`.
+
+```typescript
+import { createIndex } from "@oracle/langchain-oracledb";
+
+// Reuse the vectorStore and connection from the setup section,
+// or create one with OracleVS.fromDocuments / initialize().
+await createIndex(connection, vectorStore, {
+  idxName: "demo_hnsw_idx",
+  neighbors: 48,
+  efConstruction: 400,
+  accuracy: 95,
+  parallel: 16,
+});
+```
+
+### IVF index
+
+Switch to IVF by passing `idxType: "IVF"` along with the number of neighbor partitions to create. IVF partitions vectors into clusters and is useful when you want coarse quantization with predictable memory usage.
+
+```typescript
+import { createIndex } from "@oracle/langchain-oracledb";
+
+await createIndex(connection, vectorStore, {
+  idxName: "demo_ivf_idx",
+  idxType: "IVF",
+  neighborPart: 64,
+  accuracy: 90,
+  parallel: 8,
+});
+```
+
+Run `createIndex` once after loading data (or after `initialize`) and reuse the index for subsequent searches. To rebuild or swap strategies, drop the existing index through standard SQL (`DROP INDEX ...`) and rerun `createIndex` with new parameters.
+
 ## Next steps
 
 - Load content with [`OracleDocLoader`](/oss/integrations/document_loaders/file_loaders/oracleai)
