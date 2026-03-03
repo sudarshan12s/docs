@@ -223,19 +223,19 @@ const embeddings = new VertexAIEmbeddings({
 ```
 
 </Accordion>
-<Accordion title="Oracle AI Vector Search">
+<Accordion title="Oracle AI Database">
 
 Install dependencies:
 
 <CodeGroup>
 ```bash npm
-npm i @langchain/oracle oracledb @langchain/core
+npm i @oracle/langchain-oracledb @langchain/core
 ```
 ```bash yarn
-yarn add @langchain/oracle oracledb @langchain/core
+yarn add @oracle/langchain-oracledb @langchain/core
 ```
 ```bash pnpm
-pnpm add @langchain/oracle oracledb @langchain/core
+pnpm add @oracle/langchain-oracledb @langchain/core
 ```
 </CodeGroup>
 
@@ -251,7 +251,7 @@ Instantiate the model:
 
 ```typescript
 import oracledb from "oracledb";
-import { OracleEmbeddings } from "@langchain/oracle";
+import { OracleEmbeddings } from "@oracle/langchain-oracledb";
 
 const connection = await oracledb.getConnection({
   user: process.env.ORACLE_USER,
@@ -566,7 +566,7 @@ In production, you would typically use a more robust persistent store, such as a
     cta="View guide"
   />
   <Card
-    title="Oracle AI Vector Search"
+    title="Oracle AI Database"
     icon="link"
     href="/oss/integrations/text_embedding/oracleai"
     arrow="true"

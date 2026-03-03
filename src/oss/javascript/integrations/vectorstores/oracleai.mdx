@@ -7,7 +7,7 @@ description: "Integrate with the Oracle AI Vector Search vector store using Lang
 **Compatibility**: Only available on Node.js.
 </Tip>
 
-Oracle AI Vector Search stores embeddings alongside relational data inside Oracle Database. The `@langchain/oracle` package provides the `OracleVS` vector store plus helpers for loading, summarizing, and embedding documents.
+Oracle AI Vector Search stores embeddings alongside relational data inside Oracle Database. The `@oracle/langchain-oracledb` package provides the `OracleVS` vector store plus helpers for loading, summarizing, and embedding documents.
 
 ## Overview
 
@@ -15,7 +15,7 @@ Oracle AI Vector Search stores embeddings alongside relational data inside Oracl
 
 | Class | Package | Hybrid search | PY support |
 | :--- | :--- | :---: | :---: |
-| [`OracleVS`](https://api.js.langchain.com/classes/langchain_oracle.OracleVS.html) | [`@langchain/oracle`](https://www.npmjs.com/package/@langchain/oracle) | ✅ | ✅ |
+| [`OracleVS`](https://api.js.langchain.com/classes/langchain_oracle.OracleVS.html) | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | ✅ | ✅ |
 
 ## Setup
 
@@ -23,13 +23,13 @@ Install Oracle client bindings and the LangChain Oracle helpers:
 
 <CodeGroup>
 ```bash npm
-npm install @langchain/oracle oracledb @langchain/core
+npm install @oracle/langchain-oracledb @langchain/core
 ```
 ```bash yarn
-yarn add @langchain/oracle oracledb @langchain/core
+yarn add @oracle/langchain-oracledb @langchain/core
 ```
 ```bash pnpm
-pnpm add @langchain/oracle oracledb @langchain/core
+pnpm add @oracle/langchain-oracledb @langchain/core
 ```
 </CodeGroup>
 
@@ -48,7 +48,7 @@ The example below assumes that you already created a table with vector and metad
 :::js
 ```typescript
 import oracledb from "oracledb";
-import { OracleVS } from "@langchain/oracle";
+import { OracleVS } from "@oracle/langchain-oracledb";
 import { Document } from "@langchain/core/documents";
 
 const connection = await oracledb.getConnection({

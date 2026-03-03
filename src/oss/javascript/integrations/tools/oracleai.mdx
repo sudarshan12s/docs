@@ -7,7 +7,7 @@ description: "Integrate with the OracleSummary tool using LangChain JavaScript."
 **Compatibility**: Only available on Node.js.
 </Tip>
 
-@[OracleSummary] lets you run extractive and abstractive summarization workloads inside Oracle Database via Oracle AI Vector Search. You can keep sensitive content in place by using in-database ONNX models, or call managed providers like OCI Generative AI and Hugging Face through the same interface. The helper class lives in the `@langchain/oracle` package alongside @[OracleDocLoader], @[OracleTextSplitter], and @[OracleEmbeddings] for building end-to-end RAG pipelines.
+@[OracleSummary] lets you run extractive and abstractive summarization workloads inside Oracle Database via Oracle AI Vector Search. You can keep sensitive content in place by using in-database ONNX models, or call managed providers like OCI Generative AI and Hugging Face through the same interface. The helper class lives in the `@oracle/langchain-oracledb` package alongside @[OracleDocLoader], @[OracleTextSplitter], and @[OracleEmbeddings] for building end-to-end RAG pipelines.
 
 ## Overview
 
@@ -15,11 +15,11 @@ description: "Integrate with the OracleSummary tool using LangChain JavaScript."
 
 | Class | Package | Local | [PY support](https://python.langchain.com/docs/integrations/tools/oracleai) |
 | :--- | :--- | :---: | :---: |
-| [OracleSummary](https://api.js.langchain.com/classes/langchain_oracle.OracleSummary.html) | [`@langchain/oracle`](https://www.npmjs.com/package/@langchain/oracle) | ✅ | ✅ |
+| [OracleSummary](https://api.js.langchain.com/classes/langchain_oracle.OracleSummary.html) | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | ✅ | ✅ |
 
 ## Setup
 
-To access @[OracleSummary], install the `@langchain/oracle` helpers plus the [`oracledb`](https://www.npmjs.com/package/oracledb) driver used for database connections.
+To access @[OracleSummary], install the `@oracle/langchain-oracledb` helpers (with `@langchain/core`) and make sure the Oracle Database driver prerequisites are satisfied for your environment.
 
 ### Credentials
 
@@ -37,13 +37,13 @@ If you plan to call third-party providers such as OCI Generative AI or Hugging F
 
 <CodeGroup>
 ```bash npm
-npm install @langchain/oracle oracledb @langchain/core
+npm install @oracle/langchain-oracledb @langchain/core
 ```
 ```bash yarn
-yarn add @langchain/oracle oracledb @langchain/core
+yarn add @oracle/langchain-oracledb @langchain/core
 ```
 ```bash pnpm
-pnpm add @langchain/oracle oracledb @langchain/core
+pnpm add @oracle/langchain-oracledb @langchain/core
 ```
 </CodeGroup>
 
@@ -51,7 +51,7 @@ pnpm add @langchain/oracle oracledb @langchain/core
 
 ```typescript
 import oracledb from "oracledb";
-import { OracleSummary } from "@langchain/oracle";
+import { OracleSummary } from "@oracle/langchain-oracledb";
 
 const connection = await oracledb.getConnection({
   user: process.env.ORACLE_USER,

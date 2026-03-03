@@ -15,12 +15,12 @@ Oracle AI Vector Search keeps documents and embeddings inside Oracle Database so
 
 | Class | Package | Compatibility | Local | [PY support](/oss/python/integrations/document_loaders/oracleai) |
 | :--- | :--- | :---: | :---: | :---: |
-| [OracleDocLoader](https://api.js.langchain.com/classes/langchain_oracle.OracleDocLoader.html) | [`@langchain/oracle`](https://www.npmjs.com/package/@langchain/oracle) | Node-only | ✅ | ✅ |
-| [OracleTextSplitter](https://api.js.langchain.com/classes/langchain_oracle.OracleTextSplitter.html) | [`@langchain/oracle`](https://www.npmjs.com/package/@langchain/oracle) | Node-only | ✅ | ✅ |
+| [OracleDocLoader](https://api.js.langchain.com/classes/langchain_oracle.OracleDocLoader.html) | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | Node-only | ✅ | ✅ |
+| [OracleTextSplitter](https://api.js.langchain.com/classes/langchain_oracle.OracleTextSplitter.html) | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | Node-only | ✅ | ✅ |
 
 ## Setup
 
-To use @[OracleDocLoader] install the `@langchain/oracle` helpers plus the [`oracledb`](https://www.npmjs.com/package/oracledb) driver that opens database connections.
+To use @[OracleDocLoader] install the `@oracle/langchain-oracledb` helpers (with `@langchain/core`) and make sure the Oracle Database driver prerequisites are met.
 
 ### Credentials
 
@@ -36,13 +36,13 @@ export ORACLE_DSN="localhost:1521/free"
 
 <CodeGroup>
 ```bash npm
-npm install @langchain/oracle oracledb @langchain/core
+npm install @oracle/langchain-oracledb @langchain/core
 ```
 ```bash yarn
-yarn add @langchain/oracle oracledb @langchain/core
+yarn add @oracle/langchain-oracledb @langchain/core
 ```
 ```bash pnpm
-pnpm add @langchain/oracle oracledb @langchain/core
+pnpm add @oracle/langchain-oracledb @langchain/core
 ```
 </CodeGroup>
 
@@ -50,7 +50,7 @@ pnpm add @langchain/oracle oracledb @langchain/core
 
 ```typescript
 import oracledb from "oracledb";
-import { OracleDocLoader } from "@langchain/oracle";
+import { OracleDocLoader } from "@oracle/langchain-oracledb";
 
 const connection = await oracledb.getConnection({
   user: process.env.ORACLE_USER,
@@ -92,7 +92,7 @@ const directoryLoader = new OracleDocLoader(connection, {
 Chunk long documents before embedding to improve recall. @[OracleTextSplitter] offers multiple strategies including character, word, and sentence boundaries. See the [Oracle AI Vector Search guide](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-4E145629-7098-4C7C-804F-FC85D1F24240) for parameter descriptions.
 
 ```typescript
-import { OracleTextSplitter } from "@langchain/oracle";
+import { OracleTextSplitter } from "@oracle/langchain-oracledb";
 
 const splitter = new OracleTextSplitter(connection, {
   split: "chars",

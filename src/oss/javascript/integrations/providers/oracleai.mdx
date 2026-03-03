@@ -8,7 +8,7 @@ description: "Integrate with Oracle AI Vector Search using LangChain JavaScript.
 **Compatibility**: Only available on Node.js.
 </Tip>
 
-Oracle AI Vector Search keeps structured data, documents, and embeddings inside Oracle Database. The `@langchain/oracle` package exposes LangChain components for loading content, chunking, generating embeddings, running in-database summarization, and storing vectors—so you can build retrieval-augmented generation (RAG) pipelines without moving data across services.
+Oracle AI Vector Search keeps structured data, documents, and embeddings inside Oracle Database. The `@oracle/langchain-oracledb` package exposes LangChain components for loading content, chunking, generating embeddings, running in-database summarization, and storing vectors—so you can build retrieval-augmented generation (RAG) pipelines without moving data across services.
 
 ## Why Oracle AI Vector Search
 
@@ -21,17 +21,17 @@ Oracle AI Vector Search keeps structured data, documents, and embeddings inside 
 
 ### Packages
 
-Install the Oracle helpers plus the [`oracledb`](https://www.npmjs.com/package/oracledb) driver.
+Install the Oracle helpers and ensure your environment meets the [`oracledb`](https://www.npmjs.com/package/oracledb) driver prerequisites.
 
 <CodeGroup>
 ```bash npm
-npm install @langchain/oracle oracledb @langchain/core
+npm install @oracle/langchain-oracledb @langchain/core
 ```
 ```bash yarn
-yarn add @langchain/oracle oracledb @langchain/core
+yarn add @oracle/langchain-oracledb @langchain/core
 ```
 ```bash pnpm
-pnpm add @langchain/oracle oracledb @langchain/core
+pnpm add @oracle/langchain-oracledb @langchain/core
 ```
 </CodeGroup>
 
@@ -90,7 +90,7 @@ const connection = await oracledb.getConnection({
 <Step title="Load documents">
 
 ```typescript
-import { OracleDocLoader } from "@langchain/oracle";
+import { OracleDocLoader } from "@oracle/langchain-oracledb";
 
 const loader = new OracleDocLoader(connection, {
   owner: "TESTUSER",
@@ -104,7 +104,7 @@ const docs = await loader.load();
 <Step title="Chunk and embed">
 
 ```typescript
-import { OracleTextSplitter, OracleEmbeddings } from "@langchain/oracle";
+import { OracleTextSplitter, OracleEmbeddings } from "@oracle/langchain-oracledb";
 
 const splitter = new OracleTextSplitter(connection, {
   split: "chars",
@@ -124,7 +124,7 @@ const vectors = await embeddings.embedDocuments(chunks);
 <Step title="Store and query">
 
 ```typescript
-import { OracleVS } from "@langchain/oracle";
+import { OracleVS } from "@oracle/langchain-oracledb";
 
 const vectorStore = new OracleVS(connection, {
   owner: "TESTUSER",
