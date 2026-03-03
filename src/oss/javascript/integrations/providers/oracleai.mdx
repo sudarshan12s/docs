@@ -1,21 +1,20 @@
 ---
-title: "Oracle integrations"
+title: "OracleAI vector search integrations"
 sidebarTitle: "Overview"
-description: "Integrate with Oracle AI Vector Search using LangChain JavaScript."
+description: "Integrate with OracleAI vector search using LangChain JavaScript."
 ---
 
 <Tip>
 **Compatibility**: Only available on Node.js.
 </Tip>
 
-Oracle AI Vector Search keeps structured data, documents, and embeddings inside Oracle Database. The `@oracle/langchain-oracledb` package exposes LangChain components for loading content, chunking, generating embeddings, running in-database summarization, and storing vectors—so you can build retrieval-augmented generation (RAG) pipelines without moving data across services.
+Oracle AI Database is built for AI workloads where you query data by **meaning** (semantics), not just keywords. It combines **semantic search over unstructured content** with **relational filtering over business data** in one system—so you can build AI retrieval workflows (like RAG) without introducing a separate vector database and fragmenting data across multiple platforms.
 
-## Why Oracle AI Vector Search
+### Why it matters
 
-- Run semantic and relational queries on the same Oracle table
-- Keep sensitive content inside the database by running ONNX models locally
-- Swap in managed providers (OCI Generative AI, Hugging Face) with a configuration change
-- Use Oracle-native features—transactions, partitioning, RAC, Data Guard—for vector workloads
+- **One system for AI + business data:** vectors and operational data live together.
+- **Less fragmentation:** fewer moving parts than a separate vector store.
+- **Database-grade guarantees:** apply security, transactions, scale, and availability to the same AI workload.
 
 ## Install and configure
 
@@ -154,6 +153,5 @@ const results = await vectorStore.similaritySearch("oracle rag", 3);
 
 ## Additional resources
 
-- End-to-end [Oracle AI Vector Search demo](https://github.com/langchain-ai/langchainjs/tree/main/cookbook/oracleai.mdx)
 - Python guides for Oracle AI Vector Search integrations: [`Document loader`](/oss/python/integrations/document_loaders/oracleai), [`Embeddings`](/oss/python/integrations/text_embedding/oracleai), [`Summary`](/oss/python/integrations/tools/oracleai)
 - Oracle Database documentation on [user management](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D)
