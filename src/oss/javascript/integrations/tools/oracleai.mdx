@@ -124,15 +124,20 @@ You can wrap @[OracleSummary] in a custom LangChain tool or runnable to integrat
 
 ```typescript
 import { tool } from "@langchain/core/tools";
+import { z } from "zod";
 
-const summarizeTool = tool({
-  name: "oracle_summary",
-  description: "Summarize Oracle-sourced documents.",
-  func: async ({ text }: { text: string }) => summary.getSummary(text),
-});
+const summarizeTool = tool(
+  async ({ text }: { text: string }) => summary.getSummary(text),
+  {
+    name: "oracle_summary",
+    description: "Summarize Oracle-sourced documents.",
+    schema: z.object({
+      text: z.string().describe("Full text to summarize"),
+    }),
+  },
+);
 
-// Bind to a tool-aware model
-const llm = chatModel.bindTools([summarizeTool]);
+const toolSummary = await summarizeTool.invoke({ text });
 ```
 
 ## Next steps
