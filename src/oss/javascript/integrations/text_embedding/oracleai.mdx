@@ -1,13 +1,18 @@
 ---
-title: "OracleEmbeddings integration"
-description: "Integrate with the OracleEmbeddings embedding model using LangChain JavaScript."
+title: "Oracle AI vector search generate integration"
+description: "Integrate with the Oracle AI vector search generate embedding model using LangChain JavaScript."
 ---
 
 <Tip>
 **Compatibility**: Only available on Node.js.
 </Tip>
 
-@[OracleEmbeddings] lets you generate vector representations inside Oracle Database using Oracle AI Vector Search. You can keep embeddings next to transactional data by running ONNX models directly in-database, or route requests to managed services like OCI Generative AI and Hugging Face through the same interface.
+Oracle AI Database supports AI workloads where you query data by **meaning** (semantics), not just keywords. It combines **semantic search over unstructured content** with **relational filtering over business data** in a single system—so you can build retrieval workflows (like RAG) without introducing a separate vector database and fragmenting data across multiple platforms.
+
+This guide demonstrates how to generate embeddings for your content using `OracleEmbeddings`.
+
+> **Why generate embeddings in (or via) Oracle?**
+> You can keep data governance and operational guarantees (security, transactions, availability) close to your AI workflow—while choosing the embedding provider model that fits your environment.
 
 ## Overview
 
@@ -69,7 +74,13 @@ The third argument to the constructor is an optional `proxy` string. Use it when
 
 ## Run ONNX models inside Oracle Database
 
-Uploading an ONNX model allows Oracle Database to generate embeddings locally without transmitting data outside your VCN. Load the model once and then generate vectors with `embedQuery` or `embedDocuments`.
+Oracle accommodates a variety of embedding providers, enabling users to choose between proprietary database solutions and third-party services such as OCIGENAI and HuggingFace. This selection dictates the methodology for generating and managing embeddings.
+
+***Important*** : Should users opt for the database option, they must upload an ONNX model into the Oracle Database. Conversely, if a third-party provider is selected for embedding generation, uploading an ONNX model to Oracle Database is not required.
+
+A significant advantage of utilizing an ONNX model directly within Oracle is the enhanced security and performance it offers by eliminating the need to transmit data to external parties. Additionally, this method avoids the latency typically associated with network or REST API calls.
+
+Below is the example code to upload an ONNX model into Oracle Database:
 
 ```typescript
 import { OracleEmbeddings } from "@oracle/langchain-oracledb";
@@ -143,7 +154,6 @@ console.log(`Generated ${vectors.length} vectors`);
 
 - Store embeddings with [`OracleVS`](/oss/integrations/vectorstores/oracleai) for hybrid search
 - Summarize documents using [`OracleSummary`](/oss/integrations/tools/oracleai)
-- Explore the end-to-end [Oracle AI Vector Search demo](https://github.com/langchain-ai/langchainjs/tree/main/cookbook/oracleai.mdx)
 
 ---
 
