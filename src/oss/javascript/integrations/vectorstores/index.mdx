@@ -638,7 +638,7 @@ pnpm add @oracle/langchain-oracledb @langchain/core
 
 ```typescript
 import oracledb from "oracledb";
-import { OracleVS } from "@oracle/langchain-oracledb";
+import { OracleEmbeddings, OracleVS } from "@oracle/langchain-oracledb";
 
 const connection = await oracledb.getConnection({
   user: process.env.ORACLE_USER,
@@ -646,13 +646,18 @@ const connection = await oracledb.getConnection({
   connectionString: process.env.ORACLE_DSN,
 });
 
-const vectorStore = new OracleVS(connection, {
-  owner: "TESTUSER",
-  tablename: "DEMO_VECTORS",
-  idColumn: "ID",
-  embeddingColumn: "EMBEDDING",
-  metadataColumns: ["DOC_ID", "TITLE"],
+const embeddings = new OracleEmbeddings(connection, {
+  provider: "database",
+  model: process.env.DEMO_ONNX_MODEL ?? "DEMO_MODEL",
 });
+
+const vectorStore = new OracleVS(embeddings, {
+  client: connection,
+  tableName: "DEMO_VECTORS",
+  query: "Find support tickets mentioning service outages.",
+  distanceStrategy: "DOT",
+});
+await vectorStore.initialize();
 ```
 
 </Accordion>

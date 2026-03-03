@@ -125,13 +125,13 @@ const vectors = await embeddings.embedDocuments(chunks);
 ```typescript
 import { OracleVS } from "@oracle/langchain-oracledb";
 
-const vectorStore = new OracleVS(connection, {
-  owner: "TESTUSER",
-  tablename: "DEMO_VECTORS",
-  idColumn: "ID",
-  embeddingColumn: "EMBEDDING",
-  metadataColumns: ["DOC_ID", "TITLE"],
+const vectorStore = new OracleVS(embeddings, {
+  client: connection,
+  tableName: "DEMO_VECTORS",
+  query: "Find incidents that mention outages.",
+  distanceStrategy: "DOT",
 });
+await vectorStore.initialize();
 
 await vectorStore.addDocuments(
   chunks.map((pageContent, index) => ({

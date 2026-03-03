@@ -57,7 +57,7 @@ The example below assumes that you already created a table with vector and metad
 :::js
 ```typescript
 import oracledb from "oracledb";
-import { OracleVS } from "@oracle/langchain-oracledb";
+import { OracleEmbeddings, OracleVS } from "@oracle/langchain-oracledb";
 import { Document } from "@langchain/core/documents";
 
 const connection = await oracledb.getConnection({
@@ -66,13 +66,18 @@ const connection = await oracledb.getConnection({
   connectionString: process.env.ORACLE_DSN,
 });
 
-const vectorStore = new OracleVS(connection, {
-  owner: "TESTUSER",
-  tablename: "DEMO_VECTORS",
-  idColumn: "ID",
-  embeddingColumn: "EMBEDDING",
-  metadataColumns: ["DOC_ID", "TITLE"],
+const embeddings = new OracleEmbeddings(connection, {
+  provider: "database",
+  model: "DEMO_MODEL",
 });
+
+const vectorStore = new OracleVS(embeddings, {
+  client: connection,
+  tableName: "DEMO_VECTORS",
+  query: "Find documents about Oracle RAG patterns.",
+  distanceStrategy: "DOT",
+});
+await vectorStore.initialize();
 
 const docs: Document[] = [
   {
