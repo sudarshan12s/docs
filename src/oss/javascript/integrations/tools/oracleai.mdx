@@ -1,13 +1,21 @@
 ---
-title: "OracleSummary integration"
-description: "Integrate with the OracleSummary tool using LangChain JavaScript."
+title: "Oracle AI vector search generate summary integration"
+description: "Integrate with the Oracle AI vector search generate summary tool using LangChain JavaScript."
 ---
 
 <Tip>
 **Compatibility**: Only available on Node.js.
 </Tip>
 
-@[OracleSummary] lets you run extractive and abstractive summarization workloads inside Oracle Database via Oracle AI Vector Search. You can keep sensitive content in place by using in-database ONNX models, or call managed providers like OCI Generative AI and Hugging Face through the same interface. The helper class lives in the `@oracle/langchain-oracledb` package alongside @[OracleDocLoader], @[OracleTextSplitter], and @[OracleEmbeddings] for building end-to-end RAG pipelines.
+Oracle AI Database supports AI workloads where you query data by **meaning** (semantics), not just keywords. It combines **semantic search over unstructured content** with **relational filtering over business data** in a single system—so you can build retrieval workflows (like RAG) without introducing a separate vector database and fragmenting data across multiple platforms.
+
+This guide demonstrates how to generate document summaries using `OracleSummary` from the Oracle AI Vector Search LangChain integration.
+
+> **Why summarization here?**
+> Summaries are a practical way to compress long documents into retrieval-friendly content (previews, metadata, or condensed context) while keeping governance and operational guarantees close to the data.
+
+If you are just starting with Oracle Database, consider exploring the [free Oracle 26 AI](https://www.oracle.com/database/free/#resources). For background on user administration, refer to the official [Oracle guide](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D).
+
 
 ## Overview
 
@@ -132,7 +140,6 @@ const llm = chatModel.bindTools([summarizeTool]);
 - Load content with [`OracleDocLoader`](/oss/integrations/document_loaders/file_loaders/oracleai)
 - Chunk and normalize with [`OracleTextSplitter`](/oss/integrations/document_loaders/file_loaders/oracleai#chunk-documents)
 - Generate embeddings using [`OracleEmbeddings`](/oss/integrations/text_embedding/oracleai) and store them in [`OracleVS`](/oss/integrations/vectorstores/oracleai)
-- Explore the end-to-end [Oracle AI Vector Search demo](https://github.com/langchain-ai/langchainjs/tree/main/cookbook/oracleai.mdx)
 
 ---
 
