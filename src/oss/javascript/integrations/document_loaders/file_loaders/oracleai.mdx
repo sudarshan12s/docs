@@ -21,8 +21,8 @@ If you are just starting with Oracle Database, consider exploring the [free Orac
 
 | Class | Package | Compatibility | Local | [PY support](/oss/python/integrations/document_loaders/oracleai) |
 | :--- | :--- | :---: | :---: | :---: |
-| [OracleDocLoader](https://api.js.langchain.com/classes/langchain_oracle.OracleDocLoader.html) | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | Node-only | ✅ | ✅ |
-| [OracleTextSplitter](https://api.js.langchain.com/classes/langchain_oracle.OracleTextSplitter.html) | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | Node-only | ✅ | ✅ |
+| OracleDocLoader | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | Node-only | ✅ | ✅ |
+| OracleTextSplitter | [`@oracle/langchain-oracledb`](https://www.npmjs.com/package/@oracle/langchain-oracledb) | Node-only | ✅ | ✅ |
 
 ### Load documents
 
@@ -32,7 +32,7 @@ A significant advantage of utilizing OracleDocLoader is its capability to proces
 
 ## Setup
 
-To use @[OracleDocLoader] install the `@oracle/langchain-oracledb` helpers (with `@langchain/core`) and make sure the Oracle Database driver prerequisites are met. Refer to the [guide](https://node-oracledb.readthedocs.io/en/latest/) for comprehensive information about the Oracle Database driver.
+To use OracleDocLoader install the `@oracle/langchain-oracledb` helpers (with `@langchain/core`) and make sure the Oracle Database driver prerequisites are met. Refer to the [guide](https://node-oracledb.readthedocs.io/en/latest/) for comprehensive information about the Oracle Database driver.
 
 ### Credentials
 
@@ -90,7 +90,7 @@ console.log(docs[0]?.pageContent.slice(0, 120));
 
 ## Load from files or directories
 
-Switch the loader parameters to ingest local content. @[OracleDocLoader] automatically handles more than 150 file formats; see the [Oracle Text supported formats](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-2EC9C942-0989-4FEE-909A-3575349AC706) for the full list.
+Switch the loader parameters to ingest local content. `OracleDocLoader` automatically handles more than 150 file formats; see the [Oracle Text supported formats](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-2EC9C942-0989-4FEE-909A-3575349AC706) for the full list.
 
 ```typescript
 const fileLoader = new OracleDocLoader(connection, {
@@ -128,4 +128,4 @@ console.log(`Generated ${chunks.length} chunks`);
 
 ## API reference
 
-For detailed documentation of all @[OracleDocLoader] and @[OracleTextSplitter] features and configuration options head to the [Oracle LangChain Oracle DB repository](https://github.com/oracle/langchain-oracle/tree/main/libs/js/langchain-oracledb).
+For detailed documentation of all `OracleDocLoader` and `OracleTextSplitter` features and configuration options head to the [Oracle LangChain Oracle DB repository](https://github.com/oracle/langchain-oracle/tree/main/libs/js/langchain-oracledb).

@@ -50,11 +50,11 @@ If you plan to call managed providers (OCI Generative AI, Hugging Face), create 
 
 | Capability | Class | Docs |
 | :--- | :--- | :--- |
-| Document loading | @[OracleDocLoader] | [`Document loader guide`](/oss/integrations/document_loaders/file_loaders/oracleai) |
-| Chunking | @[OracleTextSplitter] | [`Text splitter guide`](/oss/integrations/document_loaders/file_loaders/oracleai#chunk-documents) |
-| Summaries | @[OracleSummary] | [`Tool guide`](/oss/integrations/tools/oracleai) |
-| Embeddings | @[OracleEmbeddings] | [`Embedding guide`](/oss/integrations/text_embedding/oracleai) |
-| Vector store | [OracleVS](https://api.js.langchain.com/classes/langchain_oracle.OracleVS.html) | [`Vector store guide`](/oss/integrations/vectorstores/oracleai) |
+| Document loading | OracleDocLoader | [`Document loader guide`](/oss/integrations/document_loaders/file_loaders/oracleai) |
+| Chunking | OracleTextSplitter | [`Text splitter guide`](/oss/integrations/document_loaders/file_loaders/oracleai#chunk-documents) |
+| Summaries | OracleSummary | [`Tool guide`](/oss/integrations/tools/oracleai) |
+| Embeddings | OracleEmbeddings | [`Embedding guide`](/oss/integrations/text_embedding/oracleai) |
+| Vector store | OracleVS | [`Vector store guide`](/oss/integrations/vectorstores/oracleai) |
 
 <CardGroup cols={2}>
   <Card title="Document processing" icon="file-description" href="/oss/integrations/document_loaders/file_loaders/oracleai">
@@ -154,7 +154,7 @@ const results = await vectorStore.similaritySearch("oracle rag", 3);
 ## Provider configuration
 
 - **In-database ONNX**: Upload ONNX files once with `OracleEmbeddings.loadOnnxModel(connection, "/path/to/models", "all-minilm-l12-v2.onnx", "DEMO_MODEL")` to keep workload data inside Oracle.
-- **OCI Generative AI**: Set `provider: "ocigenai"` plus `credential_name`, `url`, and `model` fields on @[OracleEmbeddings] or @[OracleSummary].
+- **OCI Generative AI**: Set `provider: "ocigenai"` plus `credential_name`, `url`, and `model` fields on `OracleEmbeddings` or `OracleSummary`.
 - **Hugging Face**: Set `provider: "huggingface"` along with `credential_name`, `url`, and model ID. Use the optional proxy argument if outbound traffic goes through an HTTP proxy.
 
 ## Additional resources
