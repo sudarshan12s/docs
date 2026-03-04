@@ -100,6 +100,34 @@ await vectorStore.addDocuments(docs);
 ```
 :::
 
+If your application already manages an Oracle Database connection pool, pass the pool directly to `OracleVS`. The store acquires and releases connections as needed.
+
+:::js
+```typescript
+const pool = await oracledb.createPool({
+  user: process.env.ORACLE_USER,
+  password: process.env.ORACLE_PASSWORD,
+  connectString: process.env.ORACLE_DSN,
+  poolIncrement: 1,
+  poolMax: 4,
+  poolMin: 0,
+  poolPingInterval: 60,
+});
+
+// Reuse embeddings from earlier example or instantiate one with pool.getConnection().
+const vectorStoreFromPool = new OracleVS(embeddings, {
+  client: pool,
+  tableName: "DEMO_VECTORS",
+  query: "Find documents about Oracle RAG patterns.",
+  distanceStrategy: "DOT",
+});
+await vectorStoreFromPool.initialize();
+
+// Release resources during shutdown.
+// await pool.close(0);
+```
+:::
+
 ## Filter search results
 
 You can pass rich metadata filters as the third argument to `similaritySearch`, `similaritySearchWithScore`, or `similaritySearchVectorWithScore`. Filters operate on the JSON `metadata` column that Oracle VS maintains for each document.
