@@ -75,6 +75,9 @@ const loader = new OracleDocLoader(connection, {
   tablename: "DEMO_TAB",
   colname: "DATA",
 });
+
+// Remember to close the connection (or pool) when your application shuts down.
+// await connection.close();
 ```
 
 ## Load from Oracle Database

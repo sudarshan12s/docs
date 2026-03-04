@@ -68,6 +68,9 @@ const embeddings = new OracleEmbeddings(connection, {
   provider: "database",
   model: "DEMO_MODEL",
 });
+
+// Close the connection (or pool) when you are done to avoid leaking resources.
+// await connection.close();
 ```
 
 The third argument to the constructor is an optional `proxy` string. Use it when outbound requests must travel through an HTTP proxy (for example, when calling Hugging Face from within a private network).
@@ -121,6 +124,9 @@ const hfEmbeddings = new OracleEmbeddings(connection, {
   url: "https://api-inference.huggingface.co/pipeline/feature-extraction/",
   model: "sentence-transformers/all-MiniLM-L6-v2",
 });
+
+// Clean up when finished:
+// await connection.close();
 ```
 
 ## Embed documents for retrieval

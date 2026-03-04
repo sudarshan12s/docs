@@ -98,6 +98,9 @@ const loader = new OracleDocLoader(connection, {
 });
 
 const docs = await loader.load();
+
+// Consider closing the connection (or pool) during cleanup.
+// await connection.close();
 ```
 </Step>
 <Step title="Chunk and embed">
@@ -141,6 +144,9 @@ await vectorStore.addDocuments(
 );
 
 const results = await vectorStore.similaritySearch("oracle rag", 3);
+
+// Close connections or pools when the app terminates to release resources.
+// await connection.close();
 ```
 </Step>
 </Steps>

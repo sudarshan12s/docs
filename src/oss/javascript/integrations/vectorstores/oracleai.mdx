@@ -94,6 +94,9 @@ const docs: Document[] = [
 ];
 
 await vectorStore.addDocuments(docs);
+
+// Close connections or pools in application shutdown hooks to avoid leaks.
+// await connection.close();
 ```
 :::
 
