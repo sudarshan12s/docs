@@ -1,0 +1,163 @@
+---
+title: "Oracle integrations"
+sidebarTitle: "Overview"
+description: "Integrate with Oracle Database using LangChain JavaScript."
+---
+
+<Tip>
+**Compatibility**: Only available on Node.js.
+</Tip>
+
+Oracle AI Database is built for AI workloads where you query data by **meaning** (semantics), not just keywords. It combines **semantic search over unstructured content** with **relational filtering over business data** in one system—so you can build AI retrieval workflows (like RAG) without introducing a separate vector database and fragmenting data across multiple platforms.
+
+### Why it matters
+
+- **One system for AI + business data:** vectors and operational data live together.
+- **Less fragmentation:** fewer moving parts than a separate vector store.
+- **Database-grade guarantees:** apply security, transactions, scale, and availability to the same AI workload.
+
+## Install and configure
+
+### Packages
+
+Install the Oracle helpers and ensure your environment meets the [`oracledb`](https://www.npmjs.com/package/oracledb) driver prerequisites.
+
+<CodeGroup>
+```bash npm
+npm install @oracle/langchain-oracledb @langchain/core
+```
+```bash yarn
+yarn add @oracle/langchain-oracledb @langchain/core
+```
+```bash pnpm
+pnpm add @oracle/langchain-oracledb @langchain/core
+```
+</CodeGroup>
+
+### Credentials
+
+Configure connection details for the Oracle user that owns your vector tables and credentials.
+
+```bash
+export ORACLE_USER=testuser
+export ORACLE_PASSWORD=testuser
+export ORACLE_DSN="localhost:1521/free"
+```
+
+If you plan to call managed providers (OCI Generative AI, Hugging Face), create Oracle credentials (for example `OCI_CRED`, `HF_CRED`) using the PL/SQL helpers described in the [Oracle AI Vector Search guide](https://www.oracle.com/pls/topic/lookup?ctx=dblatest&id=GUID-EC9DDB58-6A15-4B36-BA66-ECBA20D2CE57).
+
+## Component map
+
+| Capability | Class | Docs |
+| :--- | :--- | :--- |
+| Document loading | @[OracleDocLoader] | [`Document loader guide`](/oss/integrations/document_loaders/file_loaders/oracleai) |
+| Chunking | @[OracleTextSplitter] | [`Text splitter guide`](/oss/integrations/document_loaders/file_loaders/oracleai#chunk-documents) |
+| Summaries | @[OracleSummary] | [`Tool guide`](/oss/integrations/tools/oracleai) |
+| Embeddings | @[OracleEmbeddings] | [`Embedding guide`](/oss/integrations/text_embedding/oracleai) |
+| Vector store | [OracleVS](https://api.js.langchain.com/classes/langchain_oracle.OracleVS.html) | [`Vector store guide`](/oss/integrations/vectorstores/oracleai) |
+
+<CardGroup cols={2}>
+  <Card title="Document processing" icon="file-description" href="/oss/integrations/document_loaders/file_loaders/oracleai">
+    Load from Oracle tables, directories, or single files and normalize for downstream use.
+  </Card>
+  <Card title="Embeddings" icon="vector-bezier" href="/oss/integrations/text_embedding/oracleai">
+    Generate embeddings with in-database ONNX models or managed providers like OCI Generative AI.
+  </Card>
+  <Card title="Summaries" icon="file-text" href="/oss/integrations/tools/oracleai">
+    Run extractive or abstractive summaries inside Oracle Database or through external APIs.
+  </Card>
+  <Card title="Vector store" icon="database" href="/oss/integrations/vectorstores/oracleai">
+    Store and query vectors alongside relational data with hybrid SQL + semantic search.
+  </Card>
+</CardGroup>
+
+## Quickstart pipeline
+
+<Steps>
+<Step title="Connect to Oracle Database">
+
+```typescript
+import oracledb from "oracledb";
+
+const connection = await oracledb.getConnection({
+  user: process.env.ORACLE_USER,
+  password: process.env.ORACLE_PASSWORD,
+  connectionString: process.env.ORACLE_DSN,
+});
+```
+</Step>
+<Step title="Load documents">
+
+```typescript
+import { OracleDocLoader } from "@oracle/langchain-oracledb";
+
+const loader = new OracleDocLoader(connection, {
+  owner: "TESTUSER",
+  tablename: "DEMO_TAB",
+  colname: "DATA",
+});
+
+const docs = await loader.load();
+
+// Consider closing the connection (or pool) during cleanup.
+// await connection.close();
+```
+</Step>
+<Step title="Chunk and embed">
+
+```typescript
+import { OracleTextSplitter, OracleEmbeddings } from "@oracle/langchain-oracledb";
+
+const splitter = new OracleTextSplitter(connection, {
+  split: "chars",
+  max: 500,
+  normalize: "all",
+});
+
+const embeddings = new OracleEmbeddings(connection, {
+  provider: "database",
+  model: "DEMO_MODEL",
+});
+
+const chunks = await splitter.splitText(docs[0].pageContent);
+const vectors = await embeddings.embedDocuments(chunks);
+```
+</Step>
+<Step title="Store and query">
+
+```typescript
+import { OracleVS } from "@oracle/langchain-oracledb";
+
+const vectorStore = new OracleVS(embeddings, {
+  client: connection,
+  tableName: "DEMO_VECTORS",
+  query: "Find incidents that mention outages.",
+  distanceStrategy: "DOT",
+});
+await vectorStore.initialize();
+
+await vectorStore.addDocuments(
+  chunks.map((pageContent, index) => ({
+    pageContent,
+    metadata: { doc_id: `doc-${index}` },
+  })),
+);
+
+const results = await vectorStore.similaritySearch("oracle rag", 3);
+
+// Close connections or pools when the app terminates to release resources.
+// await connection.close();
+```
+</Step>
+</Steps>
+
+## Provider configuration
+
+- **In-database ONNX**: Upload ONNX files once with `OracleEmbeddings.loadOnnxModel(connection, "/path/to/models", "all-minilm-l12-v2.onnx", "DEMO_MODEL")` to keep workload data inside Oracle.
+- **OCI Generative AI**: Set `provider: "ocigenai"` plus `credential_name`, `url`, and `model` fields on @[OracleEmbeddings] or @[OracleSummary].
+- **Hugging Face**: Set `provider: "huggingface"` along with `credential_name`, `url`, and model ID. Use the optional proxy argument if outbound traffic goes through an HTTP proxy.
+
+## Additional resources
+
+- Python guides for Oracle AI Vector Search integrations: [`Document loader`](/oss/python/integrations/document_loaders/oracleai), [`Embeddings`](/oss/python/integrations/text_embedding/oracleai), [`Summary`](/oss/python/integrations/tools/oracleai)
+- Oracle Database documentation on [user management](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D)
