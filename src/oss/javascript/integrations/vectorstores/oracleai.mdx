@@ -114,7 +114,6 @@ const pool = await oracledb.createPool({
   poolPingInterval: 60,
 });
 
-// Reuse embeddings from earlier example or instantiate one with pool.getConnection().
 const vectorStoreFromPool = new OracleVS(embeddings, {
   client: pool,
   tableName: "DEMO_VECTORS",
