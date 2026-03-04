@@ -1525,6 +1525,16 @@
                             "oss/javascript/integrations/chat/azure",
                             "oss/javascript/integrations/text_embedding/azure_openai"
                           ]
+                        },
+                        {
+                          "group": "Oracle",
+                          "pages": [
+                            "oss/javascript/integrations/providers/oracleai",
+                            "oss/javascript/integrations/vectorstores/oracleai",
+                            "oss/javascript/integrations/text_embedding/oracleai",
+                            "oss/javascript/integrations/document_loaders/file_loaders/oracleai",
+                            "oss/javascript/integrations/tools/oracleai"
+                          ]
                         }
                       ]
                     },
