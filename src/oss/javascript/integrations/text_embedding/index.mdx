@@ -261,7 +261,7 @@ const connection = await oracledb.getConnection({
 
 const embeddings = new OracleEmbeddings(connection, {
   provider: "database",
-  model: process.env.DEMO_ONNX_MODEL ?? "VECTOR_EMBEDDING_MODEL",
+  model: process.env.DEMO_ONNX_MODEL",
 });
 ```
 
