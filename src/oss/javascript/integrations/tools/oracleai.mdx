@@ -15,7 +15,7 @@ This guide demonstrates how to generate document summaries using `OracleSummary`
 > **Why summarization here?**
 > Summaries are a practical way to compress long documents into retrieval-friendly content (previews, metadata, or condensed context) while keeping governance and operational guarantees close to the data.
 
-If you are just starting with Oracle Database, consider exploring the [free Oracle 26 AI](https://www.oracle.com/database/free/#resources). For background on user administration, refer to the official [Oracle guide](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D).
+If you are just starting with Oracle Database, consider exploring the [free Oracle 26 AI](https://www.oracle.com/database/free/#resources). For background on user administration, refer to the official [Oracle guide](https://docs.oracle.com/en/database/oracle/oracle-database/26/dbseg/configuring-privilege-and-role-authorization.html#GUID-16473474-7F47-4E40-A592-01836E7D911C).
 
 
 ## Overview
@@ -28,7 +28,7 @@ If you are just starting with Oracle Database, consider exploring the [free Orac
 
 ## Setup
 
-To access OracleSummary, install the `@oracle/langchain-oracledb` helpers (with `@langchain/core`) and make sure the Oracle Database driver prerequisites are satisfied for your environment.
+To access OracleSummary, install the `@oracle/langchain-oracledb` helpers (with `@langchain/core`) and make sure the [Oracle Database driver](https://node-oracledb.readthedocs.io/en/latest/) prerequisites are satisfied for your environment.
 
 ### Credentials
 
@@ -96,7 +96,7 @@ console.log(result); // => concise summary text
 
 ## Use managed providers
 
-Switch the `provider` parameter to route summarization requests through OCI Generative AI or Hugging Face. Provide the credential name you registered in Oracle Database and, if required, a proxy string.
+Switch the `provider` parameter to route summarization requests through [OCI Generative AI](https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm) or Hugging Face. Provide the credential name you registered in Oracle Database and, if required, a proxy string.
 
 ```typescript
 const ociSummary = new OracleSummary(
