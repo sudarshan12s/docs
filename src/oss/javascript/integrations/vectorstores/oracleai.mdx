@@ -52,7 +52,7 @@ export ORACLE_DSN="localhost:1521/free"
 
 ## Create a vector store
 
-The example below assumes that you already created a table with vector and metadata columns and generated embeddings using [`OracleEmbeddings`](/oss/integrations/text_embedding/oracleai).
+The example below assumes that you already created a table with vector and metadata columns and generated embeddings using [`OracleEmbeddings`](/oss/integrations/embeddings/oracleai).
 
 :::js
 ```typescript
@@ -214,5 +214,5 @@ Run `createIndex` once after loading data (or after `initialize`) and reuse the 
 ## Next steps
 
 - Load content with [`OracleDocLoader`](/oss/integrations/document_loaders/file_loaders/oracleai)
-- Generate embeddings with [`OracleEmbeddings`](/oss/integrations/text_embedding/oracleai)
+- Generate embeddings with [`OracleEmbeddings`](/oss/integrations/embeddings/oracleai)
 - Summarize documents using [`OracleSummary`](/oss/integrations/tools/oracleai)

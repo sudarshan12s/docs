@@ -53,14 +53,14 @@ If you plan to call managed providers (OCI Generative AI, Hugging Face), create 
 | Document loading | OracleDocLoader | [`Document loader guide`](/oss/integrations/document_loaders/file_loaders/oracleai) |
 | Chunking | OracleTextSplitter | [`Text splitter guide`](/oss/integrations/document_loaders/file_loaders/oracleai#chunk-documents) |
 | Summaries | OracleSummary | [`Tool guide`](/oss/integrations/tools/oracleai) |
-| Embeddings | OracleEmbeddings | [`Embedding guide`](/oss/integrations/text_embedding/oracleai) |
+| Embeddings | OracleEmbeddings | [`Embedding guide`](/oss/integrations/embeddings/oracleai) |
 | Vector store | OracleVS | [`Vector store guide`](/oss/integrations/vectorstores/oracleai) |
 
 <CardGroup cols={2}>
   <Card title="Document processing" icon="file-description" href="/oss/integrations/document_loaders/file_loaders/oracleai">
     Load from Oracle tables, directories, or single files and normalize for downstream use.
   </Card>
-  <Card title="Embeddings" icon="vector-bezier" href="/oss/integrations/text_embedding/oracleai">
+  <Card title="Embeddings" icon="vector-bezier" href="/oss/integrations/embeddings/oracleai">
     Generate embeddings with in-database ONNX models or managed providers like OCI Generative AI.
   </Card>
   <Card title="Summaries" icon="file-text" href="/oss/integrations/tools/oracleai">
@@ -159,5 +159,5 @@ const results = await vectorStore.similaritySearch("oracle rag", 3);
 
 ## Additional resources
 
-- Python guides for Oracle AI Vector Search integrations: [`Document loader`](https://python.langchain.com/docs/integrations/document_loaders/oracleai), [`Embeddings`](https://python.langchain.com/docs/integrations/text_embedding/oracleai), [`Summary`](https://python.langchain.com/docs/integrations/tools/oracleai)
+- Python guides for Oracle AI Vector Search integrations: [`Document loader`](https://python.langchain.com/docs/integrations/document_loaders/oracleai), [`Embeddings`](https://python.langchain.com/docs/integrations/embeddings/oracleai/), [`Summary`](https://python.langchain.com/docs/integrations/tools/oracleai)
 - Oracle Database documentation on [user management](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D)
