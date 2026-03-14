@@ -223,49 +223,6 @@ const embeddings = new VertexAIEmbeddings({
 ```
 
 </Accordion>
-<Accordion title="Oracle AI Database">
-
-Install dependencies:
-
-<CodeGroup>
-```bash npm
-npm i @oracle/langchain-oracledb @langchain/core
-```
-```bash yarn
-yarn add @oracle/langchain-oracledb @langchain/core
-```
-```bash pnpm
-pnpm add @oracle/langchain-oracledb @langchain/core
-```
-</CodeGroup>
-
-Add environment variables:
-
-```bash
-ORACLE_USER=testuser
-ORACLE_PASSWORD=testuser
-ORACLE_DSN="localhost:1521/free"
-```
-
-Instantiate the model:
-
-```typescript
-import oracledb from "oracledb";
-import { OracleEmbeddings } from "@oracle/langchain-oracledb";
-
-const connection = await oracledb.getConnection({
-  user: process.env.ORACLE_USER,
-  password: process.env.ORACLE_PASSWORD,
-  connectionString: process.env.ORACLE_DSN,
-});
-
-const embeddings = new OracleEmbeddings(connection, {
-  provider: "database",
-  model: process.env.DEMO_ONNX_MODEL",
-});
-```
-
-</Accordion>
 <Accordion title="MistralAI">
 
 Install dependencies:
