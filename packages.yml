@@ -780,17 +780,13 @@ packages:
   downloads: 28000
   downloads_updated_at: "2026-01-19T00:06:43.844774+00:00"
 - name: langchain-oracledb
-  name_title: Oracle AI Vector Search (Python)
+  name_title: Oracle AI Vector Search
   repo: oracle/langchain-oracle
   provider_page: oracleai
+  js: "@oracle/langchain-oracledb"
   downloads: 645
   downloads_updated_at: "2026-01-19T00:06:43.844774+00:00"
 - name: langchain-google-bigtable
   name_title: Bigtable
   repo: googleapis/langchain-google-bigtable-python
   provider_page: google
-- name: langchain-oracledb-js
-  name_title: Oracle AI Vector Search (JS)
-  repo: oracle/langchain-oracle
-  provider_page: oracleai
-  js: "@oracle/langchain-oracledb"
